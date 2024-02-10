@@ -1,4 +1,5 @@
 import { relations, sql } from "drizzle-orm";
+import { boolean } from "drizzle-orm/pg-core";
 import {
   index,
   int,
@@ -15,6 +16,22 @@ import { type AdapterAccount } from "next-auth/adapters";
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
 export const createTable = sqliteTableCreator((name) => `fiduxionprueba_${name}`);
+
+export const tareas = createTable(
+  "tareas",
+  {
+    id: int("id", { mode: "number" }).primaryKey({ autoIncrement: true }),
+    name: text("name", { length: 256 }),
+    createdById: text("createdById", { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    createdAt: int("created_at", { mode: "timestamp" })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: int("updatedAt", { mode: "timestamp" }),
+    finalizada: int("finalizada").default(0), // Agregar el campo 'finalizada' de tipo booleano
+  }
+);
 
 export const posts = createTable(
   "post",

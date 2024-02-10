@@ -48,14 +48,16 @@ async function CrudShowcase() {
   if (!session?.user) return null;
 
   const latestPost = await api.post.getLatest.query();
+  console.log(latestPost)
 
   return (
     <div className="w-full max-w-xs">
-      {latestPost ? (
+      {/* {latestPost ? (
         <p className="truncate">Your most recent post: {latestPost.name}</p>
       ) : (
         <p>You have no posts yet.</p>
-      )}
+      )} */}
+      <h3>Cree aqui su siguiente Tarea</h3>
 
       <CreatePost />
     </div>
