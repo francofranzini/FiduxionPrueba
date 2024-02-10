@@ -1,0 +1,2 @@
+Root es la definicion de Router que se usara a lo largo del codigo
+con los metodos definidos en posts.ts

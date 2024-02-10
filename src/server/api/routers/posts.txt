@@ -1,0 +1,5 @@
+Lo que hace o tengo entendido que hace el siguiente archivo es
+definir los metodos que se van a ejecutar para las llamadas POST. 
+En mi caso, al crear una tarea le tengo que definir que datos va a guardar
+Esto se usa para pasarselo a 'root.ts' que sera el que definira
+todas las llamadas posteriores de 'API' a lo largo del codigo
