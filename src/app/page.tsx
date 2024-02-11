@@ -1,5 +1,6 @@
 import { unstable_noStore as noStore } from "next/cache";
 import Link from "next/link";
+import { useEffect } from "react";
 
 import { CreatePost } from "~/app/_components/create-post";
 import { getServerAuthSession } from "~/server/auth";
@@ -9,7 +10,10 @@ export default async function Home() {
   noStore();
   const hello = await api.post.hello.query({ text: "from tRPC" });
   const session = await getServerAuthSession();
-  const tareas = await api.post.getLatest.query();
+  var tareas = []
+  if (session) {
+    tareas = await api.post.getLatest.query();
+  }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
@@ -42,22 +46,35 @@ export default async function Home() {
         </div>
 
         <CrudShowcase />
-        <h2 className="">Lista de Tareas</h2>
-        {tareas.length > 0 ? (
-            tareas.map(tarea =>(
-            <div className="max-w-sm rounded overflow-hidden shadow-lg bg-gray-600 " key={tarea.id}>
-              <div className="px-6 py-4">
-                <div className="font-bold text-xl mb-2">{tarea.name}</div>
-                <p className="text-gray-100 text-base">
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatibus quia, nulla! Maiores et perferendis eaque, exercitationem praesentium nihil.
-                </p>
+        <h2>Lista de Tareas</h2>
+        <div className="flex">
+          {tareas.length > 0 ? (
+            tareas.map((tarea) => (
+              <div
+                className="mx-4 h-[250px] max-w-sm overflow-hidden rounded-lg bg-gray-600 shadow-lg"
+                key={tarea.id}
+              >
+                <div className="px-6 py-4">
+                  <div className="mb-2 text-xl font-bold">{tarea.name}</div>
+                  <p className="text-base text-gray-100">
+                    Tarea creada en {tarea.createdAt.toDateString()} <br></br>
+                  </p>
+                  Estado: {tarea.finalizada == 0 ? "Pendiente" : "Finalizada"}
+                </div>
+                <button className="mx-2 my-2 rounded-lg bg-red-500 p-2">
+                  {" "}
+                  Borrar{" "}
+                </button>
+                <button className="mx-2 my-2 rounded-lg bg-blue-500 p-2">
+                  {" "}
+                  Editar{" "}
+                </button>
               </div>
-            </div>
             ))
-
-        ) : (
-          <p>Nada por aqui...</p>
-        )}
+          ) : (
+            <p>Nada por aqui...</p>
+          )}
+        </div>
       </div>
     </main>
   );
