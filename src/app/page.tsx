@@ -9,6 +9,7 @@ export default async function Home() {
   noStore();
   const hello = await api.post.hello.query({ text: "from tRPC" });
   const session = await getServerAuthSession();
+  const tareas = await api.post.getLatest.query();
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
@@ -38,9 +39,15 @@ export default async function Home() {
         </div>
 
         <CrudShowcase />
+        <h2 className="">Lista de Tareas</h2>
+        {tareas.length > 0 ? <p>Proximamente...</p> : <p>Nada por aqui...</p>}
       </div>
     </main>
   );
+}
+
+async function Tareas() {
+  
 }
 
 async function CrudShowcase() {
