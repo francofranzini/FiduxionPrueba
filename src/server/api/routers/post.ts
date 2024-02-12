@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-
 import {
   createTRPCRouter,
   protectedProcedure,
@@ -26,17 +25,17 @@ export const postRouter = createTRPCRouter({
       await ctx.db.insert(tareas).values({
         name: input.name,
         createdById: ctx.session.user.id,
-        createdAt: new Date()//hora actual
+        createdAt: new Date(), //hora actual
       });
     }),
 
-  getLatest: protectedProcedure.query(({ ctx }) => {
-    const userId = ctx.session.user.id
+  getLatest: protectedProcedure.query(({ ctx}) => {
+    const userId = ctx.session.user.id;
     const tasks = ctx.db.query.tareas.findMany({
       orderBy: (tareas, { desc }) => [desc(tareas.createdAt)],
     });
-    
-    return tasks 
+
+    return tasks;
   }),
 
   getSecretMessage: protectedProcedure.query(() => {

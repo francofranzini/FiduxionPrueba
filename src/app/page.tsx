@@ -5,8 +5,12 @@ import { useEffect } from "react";
 import { CreatePost } from "~/app/_components/create-post";
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/trpc/server";
+import Card from "./_components/card";
 
 export default async function Home() {
+
+   
+
   noStore();
   const hello = await api.post.hello.query({ text: "from tRPC" });
   const session = await getServerAuthSession();
@@ -47,29 +51,10 @@ export default async function Home() {
 
         <CrudShowcase />
         <h2>Lista de Tareas</h2>
-        <div className="flex">
+        <div className="grid">
           {tareas.length > 0 ? (
-            tareas.map((tarea) => (
-              <div
-                className="mx-4 h-[250px] max-w-sm overflow-hidden rounded-lg bg-gray-600 shadow-lg"
-                key={tarea.id}
-              >
-                <div className="px-6 py-4">
-                  <div className="mb-2 text-xl font-bold">{tarea.name}</div>
-                  <p className="text-base text-gray-100">
-                    Tarea creada en {tarea.createdAt.toDateString()} <br></br>
-                  </p>
-                  Estado: {tarea.finalizada == 0 ? "Pendiente" : "Finalizada"}
-                </div>
-                <button className="mx-2 my-2 rounded-lg bg-red-500 p-2">
-                  {" "}
-                  Borrar{" "}
-                </button>
-                <button className="mx-2 my-2 rounded-lg bg-blue-500 p-2">
-                  {" "}
-                  Editar{" "}
-                </button>
-              </div>
+            tareas.map((tarea, index) => (
+              <Card tarea={tarea} key={index}/>
             ))
           ) : (
             <p>Nada por aqui...</p>
@@ -79,6 +64,8 @@ export default async function Home() {
     </main>
   );
 }
+
+
 
 async function CrudShowcase() {
   const session = await getServerAuthSession();
