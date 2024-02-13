@@ -29,10 +29,10 @@ export const postRouter = createTRPCRouter({
       });
     }),
 
-  getLatest: protectedProcedure.query(({ ctx}) => {
-    const userId = ctx.session.user.id;
+  getLatest: publicProcedure.query(({ctx}) => {
+    const userId = ctx.session?.user.id;
     const tasks = ctx.db.query.tareas.findMany({
-      orderBy: (tareas, { desc }) => [desc(tareas.createdAt)],
+      where: (tareas, {eq}) => eq(tareas.createdById, userId)
     });
 
     return tasks;

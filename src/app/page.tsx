@@ -14,10 +14,8 @@ export default async function Home() {
   noStore();
   const hello = await api.post.hello.query({ text: "from tRPC" });
   const session = await getServerAuthSession();
-  var tareas = []
-  if (session) {
-    tareas = await api.post.getLatest.query();
-  }
+  const tareas = await api.post.getLatest.query();
+ 
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
@@ -53,9 +51,7 @@ export default async function Home() {
         <h2>Lista de Tareas</h2>
         <div className="grid">
           {tareas.length > 0 ? (
-            tareas.map((tarea, index) => (
-              <Card tarea={tarea} key={index}/>
-            ))
+            tareas.map((tarea, index) => <Card tarea={tarea} key={index} />)
           ) : (
             <p>Nada por aqui...</p>
           )}
