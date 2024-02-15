@@ -38,27 +38,57 @@ function Card({ tarea }: { tarea: Tarea }) {
       alert(error)
     }
   })
+  const finalizarPost = api.post.finalizar.useMutation({
+    onSuccess: () =>{
+      setIsEditing(false)
+      router.refresh();
+    },
+    onError: (error) =>{
+      //Aqui la idea seria usar "errors" para mostrarlo en la tarjeta, pero el formato 
+      //no me deja acceder al mensaje, queda pendiente.
+      alert(error)
+    }
+  })
+  const reabrirPost = api.post.reabrir.useMutation({
+    onSuccess: () =>{
+      setIsEditing(false)
+      router.refresh();
+    },
+    onError: (error) =>{
+      //Aqui la idea seria usar "errors" para mostrarlo en la tarjeta, pero el formato 
+      //no me deja acceder al mensaje, queda pendiente.
+      alert(error)
+    }
+  })
 
   const handleEditClick = () =>{
     setIsEditing(true)
     setTitulo(tarea.name)
   }
+  const handleEstadoClick = () =>{
+    const exe = tarea.finalizada ? reabrirCarta : finalizarCarta
+    exe()
+  }
   
 
   const borrarCarta = async () =>{
-      console.log("Borrar")
       const tareaId:number = tarea.id
       deletePost.mutate(tareaId)  
     }
   const editarCarta = () =>{
-    console.log("Editar")
     const tareaId:number = tarea.id
     //metodo para editar en la db
     editPost.mutate({titulo, tareaId})
   } 
   const finalizarCarta = () => {
     //metodo para cambiarlo en la db
-
+    const tareaId:number = tarea.id
+    finalizarPost.mutate(tareaId)
+  }
+  const reabrirCarta = () => {
+    //metodo para cambiarlo en la db
+    const tareaId:number = tarea.id
+    reabrirPost.mutate(tareaId)
   }
 
   return (
@@ -69,14 +99,14 @@ function Card({ tarea }: { tarea: Tarea }) {
             <p className="text-base text-gray-100">
             Tarea creada en {tarea.createdAt ? tarea.createdAt.toDateString() : "NA" } <br></br>
             </p>
-            Estado: {tarea.finalizada == 0 ? "Pendiente" : "Finalizada"}
+            Estado:<span style={{ color: tarea.finalizada === 0 ? "orange" : "green" }}>{tarea.finalizada === 0 ? " Pendiente" : " Finalizada"}</span>
         </div>
         <button className="mx-2 my-2 rounded-lg bg-red-500 p-2" onClick={borrarCarta}>
             {" "}
             Borrar{" "}
         </button>
         {isEditing ? <button className="mx-2 my-2 rounded-lg bg-blue-500 p-2" onClick={editarCarta}>Guardar</button>:<button className="mx-2 my-2 rounded-lg bg-blue-500 p-2" onClick={handleEditClick}>{" "}Editar{" "} </button>}
-        {isEditing ? <button className="mx-2 my-2 rounded-lg bg-red-500 p-2" onClick={() => setIsEditing(false)}>Cancelar</button> : <button className="mx-2 my-2 rounded-lg bg-green-500 p-2" onClick={finalizarCarta}>{tarea.finalizada == 1 ? "Reabrir" : "Finalizada"}</button>}
+        {isEditing ? <button className="mx-2 my-2 rounded-lg bg-red-500 p-2" onClick={() => setIsEditing(false)}>Cancelar</button> : <button className="mx-2 my-2 rounded-lg bg-green-500 p-2" onClick={handleEstadoClick}>{tarea.finalizada == 1 ? "Reabrir" : "Finalizada"}</button>}
     </div>
   )
 }

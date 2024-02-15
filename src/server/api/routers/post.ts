@@ -45,6 +45,23 @@ export const postRouter = createTRPCRouter({
         createdAt: new Date(), //hora actual
       });
     }),
+  
+  finalizar: protectedProcedure
+    .input(z.number())
+    .mutation(async ({ctx, input}) =>{
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      await ctx.db.update(tareas).set({finalizada: 1}).where(eq(tareas.id, input))
+
+    }),
+  reabrir: protectedProcedure
+    .input(z.number())
+    .mutation(async ({ctx, input}) =>{
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      await ctx.db.update(tareas).set({finalizada: 0}).where(eq(tareas.id, input))
+
+    }),
 
   getLatest: publicProcedure.query(({ctx}) => {
     const userId = ctx.session?.user.id;
