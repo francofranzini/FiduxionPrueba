@@ -38,6 +38,11 @@ function Card({ tarea }: { tarea: Tarea }) {
       alert(error)
     }
   })
+
+  const handleEditClick = () =>{
+    setIsEditing(true)
+    setTitulo(tarea.name)
+  }
   
 
   const borrarCarta = async () =>{
@@ -70,7 +75,7 @@ function Card({ tarea }: { tarea: Tarea }) {
             {" "}
             Borrar{" "}
         </button>
-        {isEditing ? <button className="mx-2 my-2 rounded-lg bg-blue-500 p-2" onClick={editarCarta}>Guardar</button>:<button className="mx-2 my-2 rounded-lg bg-blue-500 p-2" onClick={() => setIsEditing(true)}>{" "}Editar{" "} </button>}
+        {isEditing ? <button className="mx-2 my-2 rounded-lg bg-blue-500 p-2" onClick={editarCarta}>Guardar</button>:<button className="mx-2 my-2 rounded-lg bg-blue-500 p-2" onClick={handleEditClick}>{" "}Editar{" "} </button>}
         {isEditing ? <button className="mx-2 my-2 rounded-lg bg-red-500 p-2" onClick={() => setIsEditing(false)}>Cancelar</button> : <button className="mx-2 my-2 rounded-lg bg-green-500 p-2" onClick={finalizarCarta}>{tarea.finalizada == 1 ? "Reabrir" : "Finalizada"}</button>}
     </div>
   )
