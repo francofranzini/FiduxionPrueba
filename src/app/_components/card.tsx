@@ -1,9 +1,30 @@
 'use client'
-import React from 'react'
-function Card({tarea}) {
-    const borrarCarta = () =>{
+
+
+import { useRouter } from "next/navigation";
+import { api } from "~/trpc/react";
+interface Tarea{
+  id: number;
+  name: string;
+  createdById: string;
+  createdAt: Date;
+  updatedAt?: string;
+  finalizada: number;
+}
+
+function Card({ tarea }: { tarea: Tarea }) {
+  const router = useRouter()
+  const deletePost = api.post.delete.useMutation({
+    onSuccess: () =>{
+      router.refresh();
+    }
+  })
+
+    const borrarCarta = async () =>{
         console.log("Borrar")
-        //metodo para borrar en la db
+        const tareaId:number = tarea.id
+        deletePost.mutate(tareaId)
+        
       }
       const editarCarta = () =>{
         console.log("Editar")
