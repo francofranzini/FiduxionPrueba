@@ -6,7 +6,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "~/server/api/trpc";
-import { posts, tareas } from "~/server/db/schema";
+import { tareas } from "~/server/db/schema";
 
 export const postRouter = createTRPCRouter({
   hello: publicProcedure
@@ -16,18 +16,22 @@ export const postRouter = createTRPCRouter({
         greeting: `Hello ${input.text}`,
       };
     }),
+  
+  edit: protectedProcedure
+    .input(z.object({ titulo: z.string().min(1), tareaId: z.number()}))
+    .mutation(async ({ctx, input}) => {
+      await ctx.db.update(tareas).set({name: input.titulo}).where(eq(tareas.id, input.tareaId))
+
+    }),
+  
   delete: protectedProcedure
     .input(z.number())
     .mutation(async ({ctx, input}) => {
       // simulate a slow db call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const tareaId = input
-      const tareaABorrar = ctx.db.query.tareas.findFirst({
-        where: (tareas, {eq}) => eq(tareas.id, tareaId)
-      })
       //await ctx.db.delete(tareas).values(tareaABorrar)
       await ctx.db.delete(tareas).where(eq(tareas.id, tareaId))
-      console.log(tareaABorrar)
     }),
   create: protectedProcedure
     .input(z.object({ name: z.string().min(1) }))

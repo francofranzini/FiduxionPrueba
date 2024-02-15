@@ -7,6 +7,7 @@ import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/trpc/server";
 import Card from "./_components/card";
 
+
 export default async function Home() {
 
    
@@ -14,7 +15,7 @@ export default async function Home() {
   noStore();
   const hello = await api.post.hello.query({ text: "from tRPC" });
   const session = await getServerAuthSession();
-  const tareas = await api.post.getLatest.query();
+  const tareas  = await api.post.getLatest.query();
  
 
   return (
